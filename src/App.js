@@ -43,10 +43,10 @@ class App extends Component {
 
   onDismiss(itemId) {
     const isNotId = item => item.objectID !== itemId;
-    const updatedList = this.state.list.filter(isNotId);
+    const updatedHits = this.state.result.hits.filter(isNotId);
 
     this.setState({
-      list: updatedList
+      result: { ...this.state.result, hits: updatedHits }
     });
   }
 
@@ -59,22 +59,20 @@ class App extends Component {
   render() {
     const { searchTerm, result } = this.state;
 
-    if (!result) {
-      return null;
-    }
-
     return (
       <div className="page">
         <div className="interactions">
           <Search value={searchTerm} onChange={this.onSearchChange}>
             Search
           </Search>
+        </div>
+        {result ? (
           <Table
             list={result.hits}
             pattern={searchTerm}
             onDismiss={this.onDismiss}
           />
-        </div>
+        ) : null}
       </div>
     );
   }

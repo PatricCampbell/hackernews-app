@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
 import "./App.css";
 
 const DEFAULT_QUERY = "redux";
@@ -21,6 +21,7 @@ class App extends Component {
     this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+    this.onSearchSubmit = this.onSearchSubmit.bind(this);
   }
 
   setSearchTopStories(result) {
@@ -56,44 +57,48 @@ class App extends Component {
     });
   }
 
+  onSearchSubmit(event) {
+    const { searchTerm } = this.state;
+    this.fetchSearchTopStories(searchTerm);
+    event.preventDefault();
+  }
+
   render() {
     const { searchTerm, result } = this.state;
 
     return (
       <div className="page">
         <div className="interactions">
-          <Search value={searchTerm} onChange={this.onSearchChange}>
+          <Search
+            value={searchTerm}
+            onChange={this.onSearchChange}
+            onSubmit={this.onSearchSubmit}
+          >
             Search
           </Search>
         </div>
         {result ? (
-          <Table
-            list={result.hits}
-            pattern={searchTerm}
-            onDismiss={this.onDismiss}
-          />
+          <Table list={result.hits} onDismiss={this.onDismiss} />
         ) : null}
       </div>
     );
   }
 }
 
-const Search = ({ value, onChange, children }) => {
+const Search = ({ value, onChange, onSubmit, children }) => {
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       {children}
       <input type="text" onChange={onChange} value={value} />
+      <button type="submit">{children}</button>
     </form>
   );
 };
 
 const Table = ({ list, pattern, onDismiss }) => {
-  const isSearched = pattern => item =>
-    item.title.toLowerCase().includes(pattern.toLowerCase());
-
   return (
     <div className="table">
-      {list.filter(isSearched(pattern)).map(item => {
+      {list.map(item => {
         return (
           <div key={item.objectID} className="table-row">
             <span style={{ width: "40%" }}>

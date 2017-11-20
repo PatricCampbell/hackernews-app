@@ -18,7 +18,8 @@ class App extends Component {
     this.state = {
       results: null,
       searchKey: "",
-      searchTerm: DEFAULT_QUERY
+      searchTerm: DEFAULT_QUERY,
+      error: null
     };
 
     this.setSearchTopStories = this.setSearchTopStories.bind(this);
@@ -51,7 +52,7 @@ class App extends Component {
     )
       .then(res => res.json())
       .then(res => this.setSearchTopStories(res))
-      .catch(e => e);
+      .catch(error => this.setState({ error }));
   }
 
   componentDidMount() {
@@ -88,12 +89,16 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, results, searchKey } = this.state;
+    const { searchTerm, results, searchKey, error } = this.state;
     const page =
       (results && results[searchKey] && results[searchKey].page) || 0;
 
     const list =
       (results && results[searchKey] && results[searchKey].hits) || [];
+
+    if (error) {
+      return <p>Something went wrong</p>;
+    }
 
     return (
       <div className="page">

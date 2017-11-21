@@ -39,6 +39,16 @@ exports[`App has a valid snapshot 1`] = `
 </div>
 `;
 
+exports[`Button has a valid snapshot 1`] = `
+<button
+  className=""
+  onClick={undefined}
+  type="button"
+>
+  I'm a button!
+</button>
+`;
+
 exports[`Search has a valid snapshot 1`] = `
 <form
   onSubmit={undefined}

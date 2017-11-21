@@ -29,3 +29,16 @@ describe("Search", () => {
     expect(tree).toMatchSnapshot();
   });
 });
+
+describe("Button", () => {
+  it("renders without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(<Button>I'm a button!</Button>, div);
+  });
+
+  test("has a valid snapshot", () => {
+    const component = renderer.create(<Button>I'm a button!</Button>);
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});

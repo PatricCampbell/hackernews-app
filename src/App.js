@@ -203,7 +203,11 @@ Button.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const Loading = () => <div>Loading...</div>;
+const Loading = () => (
+  <div>
+    <i class="fa fa-spinner" aria-hidden="true" /> Loading...
+  </div>
+);
 
 export default App;
 

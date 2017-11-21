@@ -40,6 +40,12 @@ describe("Button", () => {
     ReactDOM.render(<Button>I'm a button!</Button>, div);
   });
 
+  it("shows a button with the correct name", () => {
+    const element = shallow(<Button>Button!</Button>);
+    expect(element.find("button").length).toBe(1);
+    expect(element.find("button").text()).toEqual("Button!");
+  });
+
   test("has a valid snapshot", () => {
     const component = renderer.create(<Button>I'm a button!</Button>);
     let tree = component.toJSON();

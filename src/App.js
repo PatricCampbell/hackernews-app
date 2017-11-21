@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import fetch from "isomorphic-fetch";
 // import logo from "./logo.svg";
 import "./App.css";
 
@@ -19,7 +20,7 @@ class App extends Component {
       results: null,
       searchKey: "",
       searchTerm: DEFAULT_QUERY,
-      error: null
+      error: null,
     };
 
     this.setSearchTopStories = this.setSearchTopStories.bind(this);
@@ -41,14 +42,14 @@ class App extends Component {
     this.setState({
       results: {
         ...results,
-        [searchKey]: { hits: updatedHits }
-      }
+        [searchKey]: { hits: updatedHits },
+      },
     });
   }
 
   fetchSearchTopStories(searchTerm, page = 0) {
     fetch(
-      `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`
+      `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`,
     )
       .then(res => res.json())
       .then(res => this.setSearchTopStories(res))
@@ -58,7 +59,7 @@ class App extends Component {
   componentDidMount() {
     const { searchTerm } = this.state;
     this.setState({
-      searchKey: searchTerm
+      searchKey: searchTerm,
     });
     this.fetchSearchTopStories(searchTerm);
   }
@@ -71,13 +72,13 @@ class App extends Component {
     const updatedHits = hits.filter(isNotId);
 
     this.setState({
-      results: { ...results, [searchKey]: { hits: updatedHits, page } }
+      results: { ...results, [searchKey]: { hits: updatedHits, page } },
     });
   }
 
   onSearchChange(event) {
     this.setState({
-      searchTerm: event.target.value
+      searchTerm: event.target.value,
     });
   }
 
@@ -170,3 +171,5 @@ const Button = ({ onClick, className = "", children }) => {
 };
 
 export default App;
+
+export { Button, Search, Table };

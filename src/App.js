@@ -121,15 +121,12 @@ class App extends Component {
         </div>
         {results ? <Table list={list} onDismiss={this.onDismiss} /> : null}
         <div className="interactions">
-          {isLoading ? (
-            <Loading />
-          ) : (
-            <Button
-              onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
-            >
-              More
-            </Button>
-          )}
+          <ButtonWithLoading
+            isLoading={isLoading}
+            onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
+          >
+            More
+          </ButtonWithLoading>
         </div>
       </div>
     );
@@ -208,6 +205,11 @@ const Loading = () => (
     <i class="fa fa-spinner" aria-hidden="true" /> Loading...
   </div>
 );
+
+const withLoading = Component => ({ isLoading, ...rest }) =>
+  isLoading ? <Loading /> : <Component {...rest} />;
+
+const ButtonWithLoading = withLoading(Button);
 
 export default App;
 

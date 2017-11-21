@@ -29,7 +29,11 @@ exports[`App has a valid snapshot 1`] = `
     className="interactions"
   >
     <div>
-      Loading...
+      <i
+        aria-hidden="true"
+        class="fa fa-spinner"
+      />
+       Loading...
     </div>
   </div>
 </div>

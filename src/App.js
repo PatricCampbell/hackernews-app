@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import fetch from "isomorphic-fetch";
 import PropTypes from "prop-types";
+import { sortBy } from "lodash";
 // import logo from "./logo.svg";
 import "./App.css";
 
@@ -13,6 +14,14 @@ const PARAM_SEARCH = "query=";
 const PARAM_PAGE = "page=";
 const PARAM_HPP = "hitsPerPage=";
 
+const SORTS = {
+  NONE: list => list,
+  TITLE: list => sortBy(list, "title"),
+  AUTHOR: list => sortBy(list, "author"),
+  COMMENTS: list => sortBy(list, "num_comments").reverse(),
+  POINTS: list => sortBy(list, "points").reverse(),
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -23,6 +32,8 @@ class App extends Component {
       searchTerm: DEFAULT_QUERY,
       error: null,
       isLoading: false,
+      sortKey: "NONE",
+      isSortReverse: false,
     };
 
     this.setSearchTopStories = this.setSearchTopStories.bind(this);
@@ -30,6 +41,7 @@ class App extends Component {
     this.onDismiss = this.onDismiss.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
+    this.onSort = this.onSort.bind(this);
   }
 
   setSearchTopStories(result) {
@@ -96,8 +108,26 @@ class App extends Component {
     event.preventDefault();
   }
 
+  onSort(sortKey) {
+    const isSortReverse =
+      this.state.sortKey === sortKey && !this.state.isSortReverse;
+
+    this.setState({
+      sortKey,
+      isSortReverse,
+    });
+  }
+
   render() {
-    const { searchTerm, results, searchKey, error, isLoading } = this.state;
+    const {
+      searchTerm,
+      results,
+      searchKey,
+      error,
+      isLoading,
+      sortKey,
+      isSortReverse,
+    } = this.state;
     const page =
       (results && results[searchKey] && results[searchKey].page) || 0;
 
@@ -119,7 +149,15 @@ class App extends Component {
             Search
           </Search>
         </div>
-        {results ? <Table list={list} onDismiss={this.onDismiss} /> : null}
+        {results ? (
+          <Table
+            list={list}
+            onDismiss={this.onDismiss}
+            sortKey={sortKey}
+            onSort={this.onSort}
+            isSortReverse={isSortReverse}
+          />
+        ) : null}
         <div className="interactions">
           <ButtonWithLoading
             isLoading={isLoading}
@@ -138,7 +176,9 @@ const Search = ({ value, onChange, onSubmit, children }) => {
     <form onSubmit={onSubmit}>
       {children}
       <input type="text" onChange={onChange} value={value} />
-      <Button type="submit">{children}</Button>
+      <Button type="submit" onClick={onSubmit}>
+        {children}
+      </Button>
     </form>
   );
 };
@@ -150,10 +190,36 @@ Search.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const Table = ({ list, onDismiss }) => {
+const Table = ({ list, onDismiss, onSort, sortKey, isSortReverse }) => {
+  const sortedList = SORTS[sortKey](list);
+  const reverseSortedList = isSortReverse ? sortedList.reverse() : sortedList;
+
   return (
     <div className="table">
-      {list.map(item => {
+      <div className="table-header">
+        <span style={{ width: "40%" }}>
+          <Sort sortKey={"TITLE"} onSort={onSort} activeSortKey={sortKey}>
+            TITLE
+          </Sort>
+        </span>
+        <span style={{ width: "30%" }}>
+          <Sort sortKey={"AUTHOR"} onSort={onSort} activeSortKey={sortKey}>
+            Author
+          </Sort>
+        </span>
+        <span style={{ width: "10%" }}>
+          <Sort sortKey={"COMMENTS"} onSort={onSort} activeSortKey={sortKey}>
+            Comments
+          </Sort>
+        </span>
+        <span style={{ width: "10%" }}>
+          <Sort sortKey={"POINTS"} onSort={onSort} activeSortKey={sortKey}>
+            Points
+          </Sort>
+        </span>
+        <span style={{ width: "10%" }}>Archive</span>
+      </div>
+      {reverseSortedList.map(item => {
         return (
           <div key={item.objectID} className="table-row">
             <span style={{ width: "40%" }}>
@@ -180,6 +246,8 @@ const Table = ({ list, onDismiss }) => {
 Table.propTypes = {
   list: PropTypes.array.isRequired,
   onDismiss: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired,
+  sortKey: PropTypes.string.isRequired,
 };
 
 const Button = ({ onClick, className, children }) => {
@@ -202,7 +270,7 @@ Button.propTypes = {
 
 const Loading = () => (
   <div>
-    <i class="fa fa-spinner" aria-hidden="true" /> Loading...
+    <i className="fa fa-spinner" aria-hidden="true" /> Loading...
   </div>
 );
 
@@ -210,6 +278,20 @@ const withLoading = Component => ({ isLoading, ...rest }) =>
   isLoading ? <Loading /> : <Component {...rest} />;
 
 const ButtonWithLoading = withLoading(Button);
+
+const Sort = ({ sortKey, onSort, children, activeSortKey }) => {
+  const sortClass = ["button-inline"];
+
+  if (sortKey === activeSortKey) {
+    sortClass.push("button-active");
+  }
+
+  return (
+    <Button className={sortClass.join(" ")} onClick={() => onSort(sortKey)}>
+      {children}
+    </Button>
+  );
+};
 
 export default App;
 

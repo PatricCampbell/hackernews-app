@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import fetch from "isomorphic-fetch";
+import PropTypes from "prop-types";
 // import logo from "./logo.svg";
 import "./App.css";
 
@@ -135,7 +136,14 @@ const Search = ({ value, onChange, onSubmit, children }) => {
   );
 };
 
-const Table = ({ list, pattern, onDismiss }) => {
+Search.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+const Table = ({ list, onDismiss }) => {
   return (
     <div className="table">
       {list.map(item => {
@@ -162,12 +170,27 @@ const Table = ({ list, pattern, onDismiss }) => {
   );
 };
 
-const Button = ({ onClick, className = "", children }) => {
+Table.propTypes = {
+  list: PropTypes.array.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+};
+
+const Button = ({ onClick, className, children }) => {
   return (
     <button onClick={onClick} className={className} type="button">
       {children}
     </button>
   );
+};
+
+Button.defaultProps = {
+  className: "",
+};
+
+Button.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  children: PropTypes.node.isRequired,
 };
 
 export default App;

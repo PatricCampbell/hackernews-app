@@ -18,7 +18,7 @@ exports[`App has a valid snapshot 1`] = `
       />
       <button
         className=""
-        onClick={undefined}
+        onClick={[Function]}
         type="button"
       >
         Search
@@ -31,7 +31,7 @@ exports[`App has a valid snapshot 1`] = `
     <div>
       <i
         aria-hidden="true"
-        class="fa fa-spinner"
+        className="fa fa-spinner"
       />
        Loading...
     </div>
@@ -73,6 +73,79 @@ exports[`Table has a valid snashot 1`] = `
 <div
   className="table"
 >
+  <div
+    className="table-header"
+  >
+    <span
+      style={
+        Object {
+          "width": "40%",
+        }
+      }
+    >
+      <button
+        className="button-inline button-active"
+        onClick={[Function]}
+        type="button"
+      >
+        TITLE
+      </button>
+    </span>
+    <span
+      style={
+        Object {
+          "width": "30%",
+        }
+      }
+    >
+      <button
+        className="button-inline"
+        onClick={[Function]}
+        type="button"
+      >
+        Author
+      </button>
+    </span>
+    <span
+      style={
+        Object {
+          "width": "10%",
+        }
+      }
+    >
+      <button
+        className="button-inline"
+        onClick={[Function]}
+        type="button"
+      >
+        Comments
+      </button>
+    </span>
+    <span
+      style={
+        Object {
+          "width": "10%",
+        }
+      }
+    >
+      <button
+        className="button-inline"
+        onClick={[Function]}
+        type="button"
+      >
+        Points
+      </button>
+    </span>
+    <span
+      style={
+        Object {
+          "width": "10%",
+        }
+      }
+    >
+      Archive
+    </span>
+  </div>
   <div
     className="table-row"
   >

@@ -264,8 +264,6 @@ class Table extends Component {
 Table.propTypes = {
   list: PropTypes.array.isRequired,
   onDismiss: PropTypes.func.isRequired,
-  onSort: PropTypes.func.isRequired,
-  sortKey: PropTypes.string.isRequired,
 };
 
 const Button = ({ onClick, className, children }) => {

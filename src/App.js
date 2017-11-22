@@ -45,7 +45,7 @@ class App extends Component {
   }
 
   setSearchTopStories(result) {
-    const { hits, page } = result;
+    const { hits } = result;
     const { searchKey, results } = this.state;
 
     const oldHits =
@@ -190,58 +190,69 @@ Search.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const Table = ({ list, onDismiss, onSort, sortKey, isSortReverse }) => {
-  const sortedList = SORTS[sortKey](list);
-  const reverseSortedList = isSortReverse ? sortedList.reverse() : sortedList;
+class Table extends Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <div className="table">
-      <div className="table-header">
-        <span style={{ width: "40%" }}>
-          <Sort sortKey={"TITLE"} onSort={onSort} activeSortKey={sortKey}>
-            TITLE
-          </Sort>
-        </span>
-        <span style={{ width: "30%" }}>
-          <Sort sortKey={"AUTHOR"} onSort={onSort} activeSortKey={sortKey}>
-            Author
-          </Sort>
-        </span>
-        <span style={{ width: "10%" }}>
-          <Sort sortKey={"COMMENTS"} onSort={onSort} activeSortKey={sortKey}>
-            Comments
-          </Sort>
-        </span>
-        <span style={{ width: "10%" }}>
-          <Sort sortKey={"POINTS"} onSort={onSort} activeSortKey={sortKey}>
-            Points
-          </Sort>
-        </span>
-        <span style={{ width: "10%" }}>Archive</span>
+    this.state = {};
+  }
+
+  render() {
+    const { list, onDismiss, onSort, sortKey, isSortReverse } = this.props;
+
+    const sortedList = SORTS[sortKey](list);
+    const reverseSortedList = isSortReverse ? sortedList.reverse() : sortedList;
+
+    return (
+      <div className="table">
+        <div className="table-header">
+          <span style={{ width: "40%" }}>
+            <Sort sortKey={"TITLE"} onSort={onSort} activeSortKey={sortKey}>
+              TITLE
+            </Sort>
+          </span>
+          <span style={{ width: "30%" }}>
+            <Sort sortKey={"AUTHOR"} onSort={onSort} activeSortKey={sortKey}>
+              Author
+            </Sort>
+          </span>
+          <span style={{ width: "10%" }}>
+            <Sort sortKey={"COMMENTS"} onSort={onSort} activeSortKey={sortKey}>
+              Comments
+            </Sort>
+          </span>
+          <span style={{ width: "10%" }}>
+            <Sort sortKey={"POINTS"} onSort={onSort} activeSortKey={sortKey}>
+              Points
+            </Sort>
+          </span>
+          <span style={{ width: "10%" }}>Archive</span>
+        </div>
+        {reverseSortedList.map(item => {
+          return (
+            <div key={item.objectID} className="table-row">
+              <span style={{ width: "40%" }}>
+                <a href={item.url}>{item.title}</a>
+              </span>
+              <span style={{ width: "30%" }}>{item.author}</span>
+              <span style={{ width: "10%" }}>{item.num_comments}</span>
+              <span style={{ width: "10%" }}>{item.points}</span>
+              <span style={{ width: "10%" }}>
+                <Button
+                  onClick={() => onDismiss(item.objectID)}
+                  className="button-inline"
+                >
+                  Dismiss
+                </Button>
+              </span>
+            </div>
+          );
+        })}
       </div>
-      {reverseSortedList.map(item => {
-        return (
-          <div key={item.objectID} className="table-row">
-            <span style={{ width: "40%" }}>
-              <a href={item.url}>{item.title}</a>
-            </span>
-            <span style={{ width: "30%" }}>{item.author}</span>
-            <span style={{ width: "10%" }}>{item.num_comments}</span>
-            <span style={{ width: "10%" }}>{item.points}</span>
-            <span style={{ width: "10%" }}>
-              <Button
-                onClick={() => onDismiss(item.objectID)}
-                className="button-inline"
-              >
-                Dismiss
-              </Button>
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+    );
+  }
+}
+
 
 Table.propTypes = {
   list: PropTypes.array.isRequired,
